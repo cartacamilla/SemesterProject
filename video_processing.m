@@ -4,7 +4,7 @@ function video_processing(video_name, output_name)
 
 MAX_LAYER = 2;
 DECAY_MAX = 5;
-INTENSITY_THRES =55;
+INTENSITY_THRES =65;
 
 initialization();
 vidObj = VideoReader(video_name);
@@ -15,7 +15,7 @@ open(vidObj2);
 % Specify that reading should start at 0.5 seconds from the
 % beginning.
 eps = 0.032;
-vidObj.CurrentTime = 5;
+vidObj.CurrentTime = 3;
 old_dt = vidObj.CurrentTime-eps;
 
 % Create an axes
@@ -23,14 +23,15 @@ old_dt = vidObj.CurrentTime-eps;
 n = 0;
 
 
-robot = struct('pos',[vidObj.Width/2;10],...
+robot = struct('pos',[vidObj.Width - 10;vidObj.Height/2],...
                'vel',[0;0],...
                'vel_desired',[0;0],...
                'acc',0,...
                'B',[0.5;0.5],...
                'F',zeros(2,2),...
-               'F_raw', zeros(2,2),...
-               'Error',[]);
+               'b1_dot', 0,...
+               'Error',[],...
+               'B_log', [0;0]);
 
 centroid = struct('pos',{zeros(2,2)},...
                   'nbr',0,...
@@ -52,8 +53,9 @@ time = struct('im_proc',0,...
 
 iter = 1;
 currAxes = axes;
-
-cleanupObj = onCleanup(@() cleanMeUp(vidObj2, robot));
+t = datetime('now');
+time_str = datestr(t,'yyyymmddTHHMMSS');
+cleanupObj = onCleanup(@() cleanMeUp(vidObj2,time_str));
 
 %%
 while hasFrame(vidObj)
@@ -87,6 +89,7 @@ while hasFrame(vidObj)
     
     currFrame = getframe(figure(1));
     writeVideo(vidObj2,currFrame);
+    writeVideo(vidObj2,currFrame);
  
     
 end
@@ -95,8 +98,15 @@ close(vidObj2);
 
 end
 
-function cleanMeUp(vidObj,robot)
+function cleanMeUp(vidObj,time_str)
         % saves data to file (or could save to workspace)
         fprintf('saving video to file...\n');
         close(vidObj);
+        
+        fprintf('saving plot of results...\n');
+        savefig(figure(2), strcat(time_str,'output.png'));
+%         set(figure(2),'Units','Inches');
+%         pos = get(figure(2),'Position');
+%         set(figure(2),'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
+%         print(figure(2),'output','-dpdf','-r0')
 end

@@ -22,15 +22,26 @@ clc
     disp(['Percentage dynamic= ',num2str(time.dynamic_in/time.dynamic_out*100)])
     disp(['image_process= ',num2str(time.im_proc)])
     
-    figure(2); hold on;
+    figure(2); 
+    subplot(2,1,1);hold on;
     plot(robot.Error(:,1),'r','LineWidth',1.4)
     plot(robot.Error(:,2),'g','LineWidth',1.4)
     plot(robot.Error(:,3),'--k','LineWidth',1.4)
-
+    plot(10*robot.b1_dot,'--r','LineWidth',1.4)
     xlabel('Time [s]')
     ylabel('Error (inner product)')
-    legend('Task 1', 'Task 2', 'Composite')
+    legend('Task 1', 'Task 2', 'Composite','b_1 dot','Location','SouthEast')
     grid on
     hold off;
+    
+    subplot(2,1,2); hold on;
+    stem(robot.B_log(1,:),'r')
+    stem(robot.B_log(2,:),'g')
+    ylabel('Beliefs value')
+    legend('b_1', 'b_2')
+    hold off;
+    
+
+    
 end
 

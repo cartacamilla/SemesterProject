@@ -18,7 +18,7 @@ Lim_ws = @(x) [min(max(x(1),1),vidObj.Width);
 %Robot's parameters
 D = 5;
 M = 1;
-epsilon = 0.1;
+epsilon = 0.01;
 
 plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
     hold on;
@@ -158,16 +158,12 @@ plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
     robot.Error(end+1,:) = [adapt_error_1, adapt_error_2, adapt_error];
     
     term1 = robot.vel'*(layer.vel(:,1) - layer.vel(:,2));
-%     term2 = -0.5 * (b1 * vel_red + b2 * vel_green)' * (f1 + f2) ;
     term2 =  (robot.B(1)*layer.vel(:,1) + robot.B(2)*layer.vel(:,2))'*...
              (robot.F(:,1) - robot.F(:,2)) ;
-    
-%     adapt_error = robot.vel - (robot.B(1)*robot.F(:,1) + robot.B(2)*robot.F(:,2));
-%     term1 = (robot.F(:,1) - robot.F(:,2))'*adapt_error;
-%     term2 = (robot.B(1) - 0.5) .* (robot.F(:,1)'*robot.F(:,1) + robot.F(:,2)'*robot.F(:,2));
-    
-    b1_dot = -epsilon * (term1 + term2);
+
+    b1_dot = - epsilon * (term1 + term2);
     robot.B(1) = robot.B(1) + b1_dot .* dt;
+    robot.b1_dot(end+1) = b1_dot;
     if(robot.B(1)>1),robot.B(1)=1;end
     if(robot.B(1)<0),robot.B(1)=0;end
 
@@ -176,6 +172,7 @@ plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
 %         robot.B(1)=1;
 %     end
     robot.B(2) = 1-robot.B(1);
+    robot.B_log(:,end+1) = [robot.B(1); robot.B(2)];
     
     robot.vel_desired = robot.B(1).*robot.F(:,1) + robot.B(2).*robot.F(:,2);
 
@@ -189,6 +186,7 @@ plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
     robot.pos = Lim_ws(robot.pos);
 
 tdone = toc(tstart);
+    figure(1)
     quiver(robot.pos(1,:),robot.pos(2,:),robot.vel(1,:),robot.vel(2,:),'r')
     hold on
     quiver(layer.pos(1,1,iter),layer.pos(2,1,iter), layer.vel(1,1), layer.vel(2,1),5,'r')

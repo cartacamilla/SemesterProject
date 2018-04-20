@@ -29,7 +29,7 @@ M = 1;
 b1 = 0.0;
 b2 = 1 - b1;
 B = [b1;b2];
-epsilon = 10;
+epsilon = 5;
 
 vel_red = [0;0];
 vel_green = [0;0];
@@ -92,8 +92,8 @@ while(t < T_final)
     vel_red = 0.2* [cos(direction_red) ; sin(direction_red)];
     vel_green = 0.2* [cos(direction_green) ; sin(direction_green)];
     
-    pos_red = pos_red + vel_red.*dt;
-    pos_green = pos_green + vel_green.*dt;
+    pos_red = pos_red + vel_red;
+    pos_green = pos_green + vel_green;
     
     if(b1 > 0.5)
         pos_red = pos_red + 0.05* (pos_robot - pos_red);        

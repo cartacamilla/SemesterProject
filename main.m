@@ -2,5 +2,7 @@ clc
 close all
 clear 
 %%
+t = datetime('now');
+time_str = datestr(t,'yyyymmddTHHMMSS');
 
-video_processing('Videos\WIN_20180409_10_40_31_Pro.mp4', 'result1.avi');
+video_processing('Videos\WIN_20180420_16_23_18_Pro.mp4', strcat(time_str,'result.avi'));
