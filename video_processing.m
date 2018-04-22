@@ -1,4 +1,4 @@
-function video_processing(video_name, output_name)
+function video_processing(video_name, output_name, orient)
 %video_processing Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -15,15 +15,20 @@ open(vidObj2);
 % Specify that reading should start at 0.5 seconds from the
 % beginning.
 eps = 0.032;
-vidObj.CurrentTime = 3;
+vidObj.CurrentTime = 2;
 old_dt = vidObj.CurrentTime-eps;
 
 % Create an axes
 
 n = 0;
 
+if(orient == 'hori')
+    init_pos =  [vidObj.Width - 10;vidObj.Height/2];
+elseif(orient == 'vert')
+    init_pos =  [vidObj.Width/2; 10];
+end
 
-robot = struct('pos',[vidObj.Width - 10;vidObj.Height/2],...
+robot = struct('pos',init_pos,...
                'vel',[0;0],...
                'vel_desired',[0;0],...
                'acc',0,...
@@ -90,7 +95,10 @@ while hasFrame(vidObj)
     currFrame = getframe(figure(1));
     writeVideo(vidObj2,currFrame);
     writeVideo(vidObj2,currFrame);
- 
+    writeVideo(vidObj2,currFrame);
+    writeVideo(vidObj2,currFrame);
+
+    save(strcat(time_str,'test.mat'));
     
 end
 close(vidObj2);
@@ -103,10 +111,4 @@ function cleanMeUp(vidObj,time_str)
         fprintf('saving video to file...\n');
         close(vidObj);
         
-        fprintf('saving plot of results...\n');
-        savefig(figure(2), strcat(time_str,'output.png'));
-%         set(figure(2),'Units','Inches');
-%         pos = get(figure(2),'Position');
-%         set(figure(2),'PaperPositionMode','Auto','PaperUnits','Inches','PaperSize',[pos(3), pos(4)])
-%         print(figure(2),'output','-dpdf','-r0')
 end

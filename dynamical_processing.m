@@ -20,6 +20,7 @@ D = 5;
 M = 1;
 epsilon = 0.01;
 
+
 plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
     hold on;
 
@@ -154,14 +155,21 @@ plot(centroid.pos(1,:),centroid.pos(2,:),'*k','MarkerSize', 30,'LineWidth', 2);
     adapt_error_1 = robot.vel'*layer.vel(:,1);
     adapt_error_2 = robot.vel'*layer.vel(:,2);
     adapt_error = robot.B(1).*adapt_error_1 + robot.B(2).*adapt_error_2;
-    
+%     pos_err_1 = norm(robot.pos - layer.pos(:,1,iter));
+%     pos_err_2 = norm(robot.pos - layer.pos(:,2,iter));
+%     adapt_error_1 = (robot.vel'*layer.vel(:,1) + pos_err_1);
+%     adapt_error_2 = (robot.vel'*layer.vel(:,2) + pos_err_2);
+%     adapt_error = robot.B(1).*adapt_error_1 + robot.B(2).*adapt_error_2;
+
     robot.Error(end+1,:) = [adapt_error_1, adapt_error_2, adapt_error];
     
     term1 = robot.vel'*(layer.vel(:,1) - layer.vel(:,2));
+%     term3 = pos_err_1 - pos_err_2;
     term2 =  (robot.B(1)*layer.vel(:,1) + robot.B(2)*layer.vel(:,2))'*...
              (robot.F(:,1) - robot.F(:,2)) ;
 
-    b1_dot = - epsilon * (term1 + term2);
+%     b1_dot = - epsilon * (term1 + term2 + term3);
+b1_dot = - epsilon * (term1 + term2)
     robot.B(1) = robot.B(1) + b1_dot .* dt;
     robot.b1_dot(end+1) = b1_dot;
     if(robot.B(1)>1),robot.B(1)=1;end
