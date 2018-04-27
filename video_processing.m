@@ -1,4 +1,4 @@
-function video_processing(video_name, output_name, orient)
+function video_processing(video_name, output_name, orient, reply)
 %video_processing Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -97,8 +97,10 @@ while hasFrame(vidObj)
     writeVideo(vidObj2,currFrame);
     writeVideo(vidObj2,currFrame);
     writeVideo(vidObj2,currFrame);
-
-    save(strcat(time_str,'test.mat'));
+    
+    if(reply == 'y' || reply == 'Y')
+        save(strcat(time_str,'test.mat'));
+    end
     
 end
 close(vidObj2);
