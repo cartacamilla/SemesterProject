@@ -16,6 +16,7 @@ clc
     disp(['f2:',num2str(robot.F(1,2)),'  ',num2str(robot.F(2,2))])
     disp(['b1 = ' , num2str(robot.B(1))]);
     disp(['b2 = ' , num2str(robot.B(2))]);
+    disp(robot.b_dot(:,end))
 
     disp('Runtimes:')
     disp(['Outer dynamic= ',num2str(time.dynamic_out)])

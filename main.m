@@ -7,5 +7,5 @@ time_str = datestr(t,'yyyymmddTHHMMSS');
 
 reply = input('Do you want to save the workspace? Y/N:','s');
 
-video_processing('Videos\WIN_20180420_15_46_04_Pro.mp4',...
+video_processing('Videos\WIN_20180420_16_14_09_Pro.mp4',...
                  strcat(time_str,'result.avi'),'hori',reply);
